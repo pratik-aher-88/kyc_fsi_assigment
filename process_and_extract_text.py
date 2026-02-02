@@ -25,7 +25,8 @@ class KYCProcessor:
         return (
             "To extract text from identity documents (passports, driver's licenses, ID cards)."
             "Your task is to carefully read and extract ONLY the printed text from the document fields listed below. "
-            "Return the data as a JSON array of objects.\n\n"
+            "CRITICAL: Return ONLY a valid JSON array of objects. Do NOT include any markdown formatting, headers, explanations, or code blocks. "
+            "The response must start with '[' and end with ']' and be valid JSON that can be parsed directly.\n\n"
 
             "CRITICAL INSTRUCTIONS:\n"
             "- Extract text EXACTLY as it appears on the document. Do not guess, infer, or modify.\n"

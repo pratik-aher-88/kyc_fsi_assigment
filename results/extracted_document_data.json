@@ -86,7 +86,7 @@
             "address": "N/A",
             "state": "N/A",
             "country": "USA",
-            "place_of_birth": "PROVINCE OF MASSACHUSETTS BAY, U.S.A.",
+            "place_of_birth": "PROVINCE OF MASSACHUSETTS BAY, U.S.A",
             "filename": "passport-2.jpg",
             "document_type": "PASSPORT",
             "document_number": "575034801",
@@ -103,8 +103,8 @@
     ],
     "metadata": {
         "num_images": 5,
-        "duration_ms": 29521.811,
-        "average_ms_per_image": 5904.362,
+        "duration_ms": 34955.323,
+        "average_ms_per_image": 6991.065,
         "prompt_tokens": 4420,
         "total_tokens": 5466,
         "average_tokens_per_image": 1093
