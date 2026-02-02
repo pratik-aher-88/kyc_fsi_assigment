@@ -178,35 +178,44 @@ class KYCProcessor:
     def _extract_usage_info(self, response_dict: Dict):
 
         usage = response_dict.get("usage", {})
-        self.prompt_tokens = usage.get("prompt_tokens", 0)
-        self.total_tokens = usage.get("total_tokens", 0)
+        prompt_tokens = usage.get("prompt_tokens", 0)
+        total_tokens = usage.get("total_tokens", 0)
+
+        return prompt_tokens, total_tokens
 
     def _write_results(self, extracted_data: List[Dict], num_images: int,
-                      duration_ms: float, average_ms: float):
+                      duration_ms: float, average_ms: float, prompt_tokens: int = None, total_tokens: int = None):
+        # Use passed in token counts if provided (for batching), otherwise use instance variables
+        prompt_tokens = prompt_tokens 
+        total_tokens = total_tokens
+
         results = {
             "extracted_data": extracted_data,
             "metadata": {
                 "num_images": num_images,
                 "duration_ms": round(duration_ms, 3),
                 "average_ms_per_image": round(average_ms, 3),
-                "prompt_tokens": self.prompt_tokens,
-                "total_tokens": self.total_tokens,
-                "average_tokens_per_image": self.total_tokens//num_images,
+                "prompt_tokens": prompt_tokens,
+                "total_tokens": total_tokens,
+                "average_tokens_per_image": total_tokens//num_images if num_images > 0 else 0,
             }
         }
 
         with open(self.results_file, 'w') as f:
             json.dump(results, f, indent=4)
 
-    def _print_statistics(self, num_images: int, duration_ms: float, average_ms: float):
+    def _print_statistics(self, num_images: int, duration_ms: float, average_ms: float, prompt_tokens: int = None, total_tokens: int = None):
+        prompt_tokens = prompt_tokens
+        total_tokens = total_tokens
+
         print(f"Processing Stats:")
         print(f"{'-'*40}")
         print(f"Images processed: {num_images}")
         print(f"Total duration: {duration_ms:.3f} ms ({duration_ms/1000:.3f} seconds)")
         print(f"Average per image: {average_ms:.3f} ms ({average_ms/1000:.3f} seconds)")
-        print(f"Prompt tokens: {self.prompt_tokens}")
-        print(f"Total tokens: {self.total_tokens}")
-        print(f"Average tokens per image: ({self.total_tokens//num_images} tokens)")
+        print(f"Prompt tokens: {prompt_tokens}")
+        print(f"Total tokens: {total_tokens}")
+        print(f"Average tokens per image: ({total_tokens//num_images if num_images > 0 else 0} tokens)")
         print(f"{'-'*40}")
 
     def _clean_json_response(self, content_str: str) -> str:
@@ -233,7 +242,7 @@ class KYCProcessor:
 
         if not response.choices or len(response.choices) == 0:
             print("No valid content found in the response.")
-            return
+            return None
 
         content_str = response.choices[0].message.content
 
@@ -243,18 +252,51 @@ class KYCProcessor:
             extracted_data = json.loads(cleaned_content)
 
             response_dict = response.model_dump() if hasattr(response, 'model_dump') else response.__dict__
-            self._extract_usage_info(response_dict)
+            prompt_tokens, total_tokens = self._extract_usage_info(response_dict)
 
             self._write_results(extracted_data, num_images,
-                                duration_ms, average_ms)
+                                duration_ms, average_ms, prompt_tokens, total_tokens)
 
             print("\nExtracted text saved to:", self.results_file)
-            self._print_statistics(num_images, duration_ms, average_ms)
+            self._print_statistics(num_images, duration_ms, average_ms,  prompt_tokens, total_tokens)
+
+            return extracted_data
 
         except json.JSONDecodeError as e:
             print(f"The assistant response was not valid JSON.")
             print(f"Error: {e}")
-            return
+            return None
+
+    def _process_batch(self, batch_files: List[str], batch_num: int, total_batches: int):
+        print(f"\nProcessing batch {batch_num}/{total_batches} ({len(batch_files)} images)...")
+
+        image_content = self._process_image_content(batch_files)
+        payload = self._create_payload(image_content)
+
+        response = self._send_request(payload)
+
+        if not response.choices or len(response.choices) == 0:
+            print(f"No valid content found in the response for batch {batch_num}.")
+            return None, 0, 0
+
+        content_str = response.choices[0].message.content
+        cleaned_content = self._clean_json_response(content_str)
+
+        try:
+            extracted_data = json.loads(cleaned_content)
+            response_dict = response.model_dump() if hasattr(response, 'model_dump') else response.__dict__
+            usage = response_dict.get("usage", {})
+            prompt_tokens = usage.get("prompt_tokens", 0)
+            total_tokens = usage.get("total_tokens", 0)
+
+
+            print("Intermediate batch results",prompt_tokens, total_tokens)
+
+            return extracted_data, prompt_tokens, total_tokens
+
+        except json.JSONDecodeError as e:
+            print(f"Batch {batch_num} response was not valid JSON. Error: {e}")
+            return None, 0, 0
 
     def process(self):
         image_files = self._get_image_files()
@@ -262,15 +304,72 @@ class KYCProcessor:
 
         print(f"Found {num_of_images} images to process in '{self.images_folder}' folder.")
 
-        image_content = self._process_image_content(image_files)
+        BATCH_SIZE = 10 # max size is 30. To be safe we are putting a threshold at 20.
 
-        payload = self._create_payload(image_content)
+        # If 20 or fewer images, process normally
+        if num_of_images <= BATCH_SIZE:
+            print(f"Processing all {num_of_images} images in a single batch.")
 
-        response = self._send_request(payload)
+            image_content = self._process_image_content(image_files)
+            payload = self._create_payload(image_content)
+            response = self._send_request(payload)
+            duration_ms, average_ms = self._metrics_calculation(num_of_images)
+            self._process_response(response, num_of_images, duration_ms, average_ms)
 
-        duration_ms, average_ms = self._metrics_calculation(num_of_images)
+        else:
+            # Batch processing for more than 20 images
+            num_batches = (num_of_images + BATCH_SIZE - 1) // BATCH_SIZE
+            print(f"Processing in {num_batches} batches of up to {BATCH_SIZE} images each.")
 
-        self._process_response(response, num_of_images, duration_ms, average_ms)
+            all_extracted_data = []
+            total_prompt_tokens = 0
+            total_tokens_sum = 0
+            overall_start_time = time.time()
+
+            for i in range(num_batches):
+                start_idx = i * BATCH_SIZE
+                end_idx = min((i + 1) * BATCH_SIZE, num_of_images)
+                batch_files = image_files[start_idx:end_idx]
+
+                batch_data, prompt_tokens, total_tokens = self._process_batch(
+                    batch_files, i + 1, num_batches
+                )
+
+                if batch_data:
+                    # Handle both list and single dict responses
+                    if isinstance(batch_data, list):
+                        all_extracted_data.extend(batch_data)
+                    else:
+                        all_extracted_data.append(batch_data)
+
+                    total_prompt_tokens += prompt_tokens
+                    total_tokens_sum += total_tokens
+
+            overall_end_time = time.time()
+            overall_duration_ms = (overall_end_time - overall_start_time) * 1000
+            overall_average_ms = overall_duration_ms / num_of_images if num_of_images > 0 else 0
+
+            # Write combined results
+            self._write_results(
+                all_extracted_data,
+                num_of_images,
+                overall_duration_ms,
+                overall_average_ms,
+                total_prompt_tokens,
+                total_tokens_sum
+            )
+
+            print("\n" + "="*40)
+            print("ALL BATCHES COMPLETED")
+            print("="*40)
+            print(f"\nExtracted text saved to: {self.results_file}")
+            self._print_statistics(
+                num_of_images,
+                overall_duration_ms,
+                overall_average_ms,
+                total_prompt_tokens,
+                total_tokens_sum
+            )
 
 
 
