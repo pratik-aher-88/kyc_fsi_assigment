@@ -7,17 +7,21 @@ from typing import Dict, List
 from fireworks import Fireworks
 from PIL import Image
 import io
+from cryptography.fernet import Fernet
+import hashlib
 
 
 
 class KYCProcessor:
-    def __init__(self, api_key: str, optimized: bool = False):
+    def __init__(self, api_key: str, optimized: bool = False, encrypt: bool = True, encryption_key: str = None):
         self.api_key = api_key
         self.model = "accounts/fireworks/models/qwen3-vl-235b-a22b-instruct"
         self.temperature = 0.5
         self.images_folder = "documents" if not optimized else "optimized_documents"
         self.results_file = "results/extracted_document_data.json" if not optimized else "results/extracted_document_data_optimized.json"
         self.system_prompt = self._system_prompt()
+        self.encrypt = encrypt
+        self.encryption_key = self._get_encryption_key(encryption_key) if encrypt else None
 
         self.client = Fireworks(api_key=self.api_key)
     
@@ -85,7 +89,51 @@ class KYCProcessor:
             "IMPORTANT: Double-check numbers and measurements. Extract text character-by-character without interpretation. "
             "Accuracy is critical - if you're unsure about a character, look more carefully at the image."
         )
-    
+
+    def _get_encryption_key(self, key: str = None) -> bytes:
+        if key is None:
+            key = os.getenv("ENCRYPTION_KEY")
+            if key is None:
+                raise ValueError(
+                    "Encryption is enabled but no key provided. "
+                    "Set ENCRYPTION_KEY environment variable or pass encryption_key parameter."
+                )
+
+        # Generate a valid Fernet key from the password using SHA256
+        key_bytes = hashlib.sha256(key.encode()).digest()
+        return base64.urlsafe_b64encode(key_bytes)
+
+    def _write_encrypted(self, data: bytes, file_path: str):
+        fernet = Fernet(self.encryption_key)
+        encrypted_data = fernet.encrypt(data)
+
+        encrypted_file_path = file_path + '.encrypted'
+        with open(encrypted_file_path, 'wb') as f:
+            f.write(encrypted_data)
+
+        return encrypted_file_path
+
+    @staticmethod
+    def decrypt_file(encrypted_file_path: str, encryption_key: str, output_path: str = None):
+
+        key_bytes = hashlib.sha256(encryption_key.encode()).digest()
+        fernet_key = base64.urlsafe_b64encode(key_bytes)
+        fernet = Fernet(fernet_key)
+
+        with open(encrypted_file_path, 'rb') as f:
+            encrypted_data = f.read()
+
+        decrypted_data = fernet.decrypt(encrypted_data)
+
+        if output_path is None:
+            output_path = encrypted_file_path.replace('.encrypted', '')
+
+        with open(output_path, 'wb') as f:
+            f.write(decrypted_data)
+
+        print(f"✓ File decrypted successfully: {output_path}")
+        return output_path
+
     def _create_payload(self, image_content):
         messages = [
             {
@@ -187,7 +235,7 @@ class KYCProcessor:
     def _write_results(self, extracted_data: List[Dict], num_images: int,
                       duration_ms: float, average_ms: float, prompt_tokens: int = None, total_tokens: int = None):
         # Use passed in token counts if provided (for batching), otherwise use instance variables
-        prompt_tokens = prompt_tokens 
+        prompt_tokens = prompt_tokens
         total_tokens = total_tokens
 
         results = {
@@ -202,8 +250,16 @@ class KYCProcessor:
             }
         }
 
-        with open(self.results_file, 'w') as f:
-            json.dump(results, f, indent=4)
+        if self.encrypt:
+            # Write directly to encrypted file
+            json_bytes = json.dumps(results, indent=4).encode('utf-8')
+            encrypted_path = self._write_encrypted(json_bytes, self.results_file)
+            print(f"✓ Results encrypted: {encrypted_path}")
+            self.results_file = encrypted_path
+        else:
+            # Write unencrypted file
+            with open(self.results_file, 'w') as f:
+                json.dump(results, f, indent=4)
 
     def _print_statistics(self, num_images: int, duration_ms: float, average_ms: float, prompt_tokens: int = None, total_tokens: int = None):
         prompt_tokens = prompt_tokens
@@ -375,25 +431,56 @@ class KYCProcessor:
 
 
 def main():
-
-    api_key = os.getenv("FIREWORKS_API_KEY")
-
-    if not api_key:
-        raise ValueError("FIREWORKS_API_KEY environment variable is not set")
-    
     parser = argparse.ArgumentParser(
         description="Extract information from documents in documents folder."
     )
     parser.add_argument(
         "--optimized",
-        type=bool,
-        default=False,
+        action="store_true",
         help="Use pre processed images optimized for OCR"
+    )
+    parser.add_argument(
+        "--no-encrypt",
+        action="store_true",
+        help="Disable encryption and save as plain text (not recommended for PII)"
+    )
+    parser.add_argument(
+        "--decrypt",
+        type=str,
+        metavar="FILE",
+        help="Decrypt an encrypted results file (provide path to .encrypted file)"
+    )
+    parser.add_argument(
+        "--output",
+        type=str,
+        metavar="FILE",
+        help="Output path for decrypted file (only used with --decrypt)"
     )
 
     args = parser.parse_args()
 
-    kycpreprocessor = KYCProcessor(api_key, args.optimized)
+    # Handle decryption mode
+    if args.decrypt:
+        encryption_key = os.getenv("ENCRYPTION_KEY")
+        if not encryption_key:
+            raise ValueError("ENCRYPTION_KEY environment variable is not set")
+
+        KYCProcessor.decrypt_file(args.decrypt, encryption_key, args.output)
+        return
+
+    # Normal processing mode
+    api_key = os.getenv("FIREWORKS_API_KEY")
+    if not api_key:
+        raise ValueError("FIREWORKS_API_KEY environment variable is not set")
+
+    encrypt = not args.no_encrypt
+
+    if encrypt:
+        print("🔒 Encryption ENABLED - writing directly to encrypted file")
+    else:
+        print("⚠️  WARNING: Encryption DISABLED - PII will be stored in plain text")
+
+    kycpreprocessor = KYCProcessor(api_key, args.optimized, encrypt=encrypt)
     kycpreprocessor.process()
 
 
