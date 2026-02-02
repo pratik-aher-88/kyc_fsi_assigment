@@ -14,7 +14,7 @@ class KYCProcessor:
     def __init__(self, api_key: str, optimized: bool = False):
         self.api_key = api_key
         self.model = "accounts/fireworks/models/qwen3-vl-235b-a22b-instruct"
-        self.temperature = 0.7
+        self.temperature = 0.5
         self.images_folder = "documents" if not optimized else "optimized_documents"
         self.results_file = "results/extracted_document_data.json" if not optimized else "results/extracted_document_data_optimized.json"
         self.system_prompt = self._system_prompt()
