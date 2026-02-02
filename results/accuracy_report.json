@@ -1,0 +1,656 @@
+{
+    "overall_accuracy": 99.83,
+    "field_accuracies": {
+        "first_name": 100.0,
+        "last_name": 100.0,
+        "address": 99.06,
+        "state": 100.0,
+        "country": 100.0,
+        "place_of_birth": 100.0,
+        "document_type": 100.0,
+        "document_number": 100.0,
+        "date_of_birth": 100.0,
+        "document_issue_date": 100.0,
+        "document_expiry_date": 98.0,
+        "class": 100.0,
+        "sex": 100.0,
+        "height": 100.0,
+        "weight": 100.0,
+        "hair": 100.0,
+        "eyes": 100.0
+    },
+    "document_accuracies": {
+        "License-3.jpeg": 99.34,
+        "License 1.png": 99.91,
+        "License-2.jpg": 99.88,
+        "passport-1.jpeg": 100.0,
+        "passport-2.jpg": 100.0
+    },
+    "detailed_comparison": [
+        {
+            "filename": "License-3.jpeg",
+            "field_comparisons": [
+                {
+                    "field": "first_name",
+                    "ground_truth": "JOHN",
+                    "extracted": "JOHN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "last_name",
+                    "ground_truth": "PUBLIC",
+                    "extracted": "PUBLIC",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "address",
+                    "ground_truth": "1234 YOUR STREET, YOUR CITY, NC 99999-1234",
+                    "extracted": "1234 YOUR STREET YOUR CITY, NC 99999-1234",
+                    "accuracy": 0.988,
+                    "match": false
+                },
+                {
+                    "field": "state",
+                    "ground_truth": "North Carolina",
+                    "extracted": "North Carolina",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "country",
+                    "ground_truth": "USA",
+                    "extracted": "USA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "place_of_birth",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_type",
+                    "ground_truth": "driver license",
+                    "extracted": "DRIVER LICENSE",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_number",
+                    "ground_truth": "000123456789",
+                    "extracted": "000123456789",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "date_of_birth",
+                    "ground_truth": "05/28/1952",
+                    "extracted": "05/28/1952",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_issue_date",
+                    "ground_truth": "05/28/2024",
+                    "extracted": "05/28/2024",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_expiry_date",
+                    "ground_truth": "05/28/2029",
+                    "extracted": "03/28/2029",
+                    "accuracy": 0.9,
+                    "match": false
+                },
+                {
+                    "field": "class",
+                    "ground_truth": "B",
+                    "extracted": "B",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "sex",
+                    "ground_truth": "M",
+                    "extracted": "M",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "height",
+                    "ground_truth": "5-10\"",
+                    "extracted": "5-10\"",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "weight",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "hair",
+                    "ground_truth": "GRY",
+                    "extracted": "GRY",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "eyes",
+                    "ground_truth": "BRO",
+                    "extracted": "BRO",
+                    "accuracy": 1.0,
+                    "match": true
+                }
+            ],
+            "document_accuracy": 99.34
+        },
+        {
+            "filename": "License 1.png",
+            "field_comparisons": [
+                {
+                    "field": "first_name",
+                    "ground_truth": "IMA",
+                    "extracted": "IMA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "last_name",
+                    "ground_truth": "CARDHOLDER",
+                    "extracted": "CARDHOLDER",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "address",
+                    "ground_truth": "2570 24TH STREET, ANYTOWN, CA 95818",
+                    "extracted": "2570 24TH STREET ANYTOWN, CA 95818",
+                    "accuracy": 0.9855,
+                    "match": false
+                },
+                {
+                    "field": "state",
+                    "ground_truth": "California",
+                    "extracted": "California",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "country",
+                    "ground_truth": "USA",
+                    "extracted": "USA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "place_of_birth",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_type",
+                    "ground_truth": "driver license",
+                    "extracted": "DRIVER LICENSE",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_number",
+                    "ground_truth": "I1234568",
+                    "extracted": "I1234568",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "date_of_birth",
+                    "ground_truth": "08/31/1977",
+                    "extracted": "08/31/1977",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_issue_date",
+                    "ground_truth": "08/31/2009",
+                    "extracted": "08/31/2009",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_expiry_date",
+                    "ground_truth": "08/31/2014",
+                    "extracted": "08/31/2014",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "class",
+                    "ground_truth": "C",
+                    "extracted": "C",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "sex",
+                    "ground_truth": "F",
+                    "extracted": "F",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "height",
+                    "ground_truth": "5'-05\"",
+                    "extracted": "5'-05\"",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "weight",
+                    "ground_truth": "125 lb",
+                    "extracted": "125 lb",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "hair",
+                    "ground_truth": "BRN",
+                    "extracted": "BRN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "eyes",
+                    "ground_truth": "BRN",
+                    "extracted": "BRN",
+                    "accuracy": 1.0,
+                    "match": true
+                }
+            ],
+            "document_accuracy": 99.91
+        },
+        {
+            "filename": "License-2.jpg",
+            "field_comparisons": [
+                {
+                    "field": "first_name",
+                    "ground_truth": "JANICE ANN",
+                    "extracted": "JANICE ANN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "last_name",
+                    "ground_truth": "SAMPLE",
+                    "extracted": "SAMPLE",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "address",
+                    "ground_truth": "123 MAIN STREET, APT. 1, HARRISBURG, PA 17101-0000",
+                    "extracted": "123 MAIN STREET APT. 1 HARRISBURG, PA 17101-0000",
+                    "accuracy": 0.9796,
+                    "match": false
+                },
+                {
+                    "field": "state",
+                    "ground_truth": "Pennsylvania",
+                    "extracted": "Pennsylvania",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "country",
+                    "ground_truth": "USA",
+                    "extracted": "USA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "place_of_birth",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_type",
+                    "ground_truth": "driver's license",
+                    "extracted": "DRIVER'S LICENSE",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_number",
+                    "ground_truth": "99 999 999",
+                    "extracted": "99 999 999",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "date_of_birth",
+                    "ground_truth": "01/07/2005",
+                    "extracted": "01/07/2005",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_issue_date",
+                    "ground_truth": "01/07/2022",
+                    "extracted": "01/07/2022",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_expiry_date",
+                    "ground_truth": "01/08/2026",
+                    "extracted": "01/08/2026",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "class",
+                    "ground_truth": "C",
+                    "extracted": "C",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "sex",
+                    "ground_truth": "F",
+                    "extracted": "F",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "height",
+                    "ground_truth": "5'-05\"",
+                    "extracted": "5'-05\"",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "weight",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "hair",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "eyes",
+                    "ground_truth": "BLU",
+                    "extracted": "BLU",
+                    "accuracy": 1.0,
+                    "match": true
+                }
+            ],
+            "document_accuracy": 99.88
+        },
+        {
+            "filename": "passport-1.jpeg",
+            "field_comparisons": [
+                {
+                    "field": "first_name",
+                    "ground_truth": "JOHN",
+                    "extracted": "JOHN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "last_name",
+                    "ground_truth": "DOE",
+                    "extracted": "DOE",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "address",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "state",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "country",
+                    "ground_truth": "USA",
+                    "extracted": "USA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "place_of_birth",
+                    "ground_truth": "California, U.S.A",
+                    "extracted": "CALIFORNIA, U.S.A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_type",
+                    "ground_truth": "passport",
+                    "extracted": "PASSPORT",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_number",
+                    "ground_truth": "963545637",
+                    "extracted": "963545637",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "date_of_birth",
+                    "ground_truth": "15 Mar 1996",
+                    "extracted": "15 Mar 1996",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_issue_date",
+                    "ground_truth": "14 Apr 2017",
+                    "extracted": "14 Apr 2017",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_expiry_date",
+                    "ground_truth": "14 Apr 2027",
+                    "extracted": "14 Apr 2027",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "class",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "sex",
+                    "ground_truth": "M",
+                    "extracted": "M",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "height",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "weight",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "hair",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "eyes",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                }
+            ],
+            "document_accuracy": 100.0
+        },
+        {
+            "filename": "passport-2.jpg",
+            "field_comparisons": [
+                {
+                    "field": "first_name",
+                    "ground_truth": "BENJAMIN",
+                    "extracted": "BENJAMIN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "last_name",
+                    "ground_truth": "FRANKLIN",
+                    "extracted": "FRANKLIN",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "address",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "state",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "country",
+                    "ground_truth": "USA",
+                    "extracted": "USA",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "place_of_birth",
+                    "ground_truth": "Province of Massachusetts Bay, U.S.A.",
+                    "extracted": "PROVINCE OF MASSACHUSETTS BAY, U.S.A.",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_type",
+                    "ground_truth": "passport",
+                    "extracted": "PASSPORT",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_number",
+                    "ground_truth": "575034801",
+                    "extracted": "575034801",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "date_of_birth",
+                    "ground_truth": "17 Jan 1706",
+                    "extracted": "17 Jan 1706",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_issue_date",
+                    "ground_truth": "16 Jan 2018",
+                    "extracted": "16 Jan 2018",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "document_expiry_date",
+                    "ground_truth": "15 Jan 2028",
+                    "extracted": "15 Jan 2028",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "class",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "sex",
+                    "ground_truth": "M",
+                    "extracted": "M",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "height",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "weight",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "hair",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                },
+                {
+                    "field": "eyes",
+                    "ground_truth": "N/A",
+                    "extracted": "N/A",
+                    "accuracy": 1.0,
+                    "match": true
+                }
+            ],
+            "document_accuracy": 100.0
+        }
+    ]
+}
