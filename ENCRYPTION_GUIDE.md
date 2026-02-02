@@ -1,7 +1,7 @@
 # Encryption at Rest - Usage Guide
 
 ## Overview
-The KYC processor now encrypts extracted PII data at rest using Fernet symmetric encryption (AES 128-bit in CBC mode).
+The KYC processor now encrypts extracted PII data at rest using Fernet symmetric encryption (AES 128-bit).
 
 ## Setup
 
@@ -54,30 +54,6 @@ python process_and_extract_text.py --decrypt results/extracted_document_data.jso
 # Decrypt to custom output path
 python process_and_extract_text.py --decrypt results/extracted_document_data.json.encrypted --output decrypted_data.json
 ```
-
-## Security Best Practices
-
-1. **Key Management**
-   - Never hardcode encryption keys in your code
-   - Use environment variables or a secrets manager (AWS Secrets Manager, HashiCorp Vault, etc.)
-   - Rotate encryption keys periodically
-
-2. **Access Control**
-   - Limit file system permissions on encrypted files
-   - Use `chmod 600` on Linux/Mac to restrict access
-
-3. **Secure Key Storage**
-   ```bash
-   # Store in a secure file with restricted permissions
-   echo "ENCRYPTION_KEY=your-key-here" > .env
-   chmod 600 .env
-   source .env
-   ```
-
-4. **Production Deployment**
-   - Use cloud-based key management services (AWS KMS, Azure Key Vault, GCP KMS)
-   - Enable audit logging for all decryption operations
-   - Implement key rotation policies
 
 ## Python API Usage
 

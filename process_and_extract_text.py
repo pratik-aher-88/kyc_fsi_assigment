@@ -361,10 +361,10 @@ class KYCProcessor:
 
         print(f"Found {num_of_images} images to process in '{self.images_folder}' folder.")
 
-        BATCH_SIZE = 20 # max size is 30. To be safe we are putting a threshold at 20.
+        MAX_BATCH_SIZE = 20 # max size is 30. To be safe we are putting a threshold at 20.
 
         # If 20 or fewer images, process normally
-        if num_of_images <= BATCH_SIZE:
+        if num_of_images <= MAX_BATCH_SIZE:
             print(f"Processing all {num_of_images} images in a single batch.")
 
             image_content = self._process_image_content(image_files)
@@ -375,8 +375,8 @@ class KYCProcessor:
 
         else:
             # Batch processing for more than 20 images
-            num_batches = (num_of_images + BATCH_SIZE - 1) // BATCH_SIZE
-            print(f"Processing in {num_batches} batches of up to {BATCH_SIZE} images each.")
+            num_batches = (num_of_images + MAX_BATCH_SIZE - 1) // MAX_BATCH_SIZE
+            print(f"Processing in {num_batches} batches of up to {MAX_BATCH_SIZE} images each.")
 
             all_extracted_data = []
             total_prompt_tokens = 0
@@ -384,8 +384,8 @@ class KYCProcessor:
             overall_start_time = time.time()
 
             for i in range(num_batches):
-                start_idx = i * BATCH_SIZE
-                end_idx = min((i + 1) * BATCH_SIZE, num_of_images)
+                start_idx = i * MAX_BATCH_SIZE
+                end_idx = min((i + 1) * MAX_BATCH_SIZE, num_of_images)
                 batch_files = image_files[start_idx:end_idx]
 
                 batch_data, prompt_tokens, total_tokens = self._process_batch(
