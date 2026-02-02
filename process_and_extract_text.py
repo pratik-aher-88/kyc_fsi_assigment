@@ -304,7 +304,7 @@ class KYCProcessor:
 
         print(f"Found {num_of_images} images to process in '{self.images_folder}' folder.")
 
-        BATCH_SIZE = 10 # max size is 30. To be safe we are putting a threshold at 20.
+        BATCH_SIZE = 20 # max size is 30. To be safe we are putting a threshold at 20.
 
         # If 20 or fewer images, process normally
         if num_of_images <= BATCH_SIZE:

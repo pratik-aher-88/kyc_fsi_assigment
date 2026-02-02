@@ -1,12 +1,12 @@
 {
-    "overall_accuracy": 99.93,
+    "overall_accuracy": 99.69,
     "field_accuracies": {
         "first_name": 100.0,
         "last_name": 100.0,
         "address": 98.84,
         "state": 100.0,
         "country": 100.0,
-        "place_of_birth": 100.0,
+        "place_of_birth": 95.96,
         "document_type": 100.0,
         "document_number": 100.0,
         "date_of_birth": 100.0,
@@ -22,7 +22,7 @@
     "document_accuracies": {
         "License 1.png": 99.91,
         "License-2.jpg": 99.88,
-        "passport-2.jpg": 100.0
+        "passport-2.jpg": 99.29
     },
     "detailed_comparison": [
         {
@@ -316,9 +316,9 @@
                 {
                     "field": "place_of_birth",
                     "ground_truth": "Province of Massachusetts Bay, U.S.A.",
-                    "extracted": "PROVINCE OF MASSACHUSETTS BAY, U.S.A.",
-                    "accuracy": 1.0,
-                    "match": true
+                    "extracted": "PROVINCE OF MASSACHUSETTS BAY",
+                    "accuracy": 0.8788,
+                    "match": false
                 },
                 {
                     "field": "document_type",
@@ -398,7 +398,7 @@
                     "match": true
                 }
             ],
-            "document_accuracy": 100.0
+            "document_accuracy": 99.29
         }
     ]
 }

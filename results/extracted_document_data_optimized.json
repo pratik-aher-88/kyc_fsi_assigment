@@ -103,8 +103,8 @@
     ],
     "metadata": {
         "num_images": 5,
-        "duration_ms": 32550.675,
-        "average_ms_per_image": 6510.135,
+        "duration_ms": 36394.033,
+        "average_ms_per_image": 7278.807,
         "prompt_tokens": 3890,
         "total_tokens": 4933,
         "average_tokens_per_image": 986
